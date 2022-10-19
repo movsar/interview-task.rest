@@ -12,38 +12,42 @@ namespace API.Controllers {
         }
 
         [HttpPost("create")]
-        public async Task Post(TdTask tdTask) {
+        public async Task<IActionResult> Post(TdTask tdTask) {
             await _storage.TdTasks.Add(tdTask);
+            return Ok();
         }
 
         [HttpGet("retrieve")]
-        public async Task<TdTask?> Get(Guid? id) {
-            return await _storage.TdTasks.GetById(id);
+        public async Task<IActionResult> Get(Guid? id) {
+            var tdTask = await _storage.TdTasks.GetById(id);
+            return Ok(tdTask);
         }
 
         [HttpPut("update")]
-        public async Task Put(Guid? id, TdTask tdTask) {
+        public async Task<IActionResult> Put(Guid? id, TdTask tdTask) {
             await _storage.TdTasks.Update(id, tdTask);
+            return Ok();
         }
 
         [HttpDelete("delete")]
-        public async Task Delete(Guid id) {
+        public async Task<IActionResult> Delete(Guid id) {
             await _storage.TdTasks.Remove(id);
+            return Ok();
         }
 
         [HttpGet("list")]
-        public IEnumerable<TdTask> ListAll() {
-            return _storage.TdTasks.ListAll();
+        public IActionResult ListAll() {
+            return Ok(_storage.TdTasks.ListAll());
         }
 
         [HttpGet("list/overdue")]
-        public IEnumerable<TdTask> ListOverdue() {
-            return _storage.TdTasks.ListOverdue();
+        public IActionResult ListOverdue() {
+            return Ok(_storage.TdTasks.ListOverdue());
         }
-        
+
         [HttpGet("list/pending")]
-        public IEnumerable<TdTask> ListPending() {
-            return _storage.TdTasks.ListPending();
+        public IActionResult ListPending() {
+            return Ok(_storage.TdTasks.ListPending());
         }
 
     }
