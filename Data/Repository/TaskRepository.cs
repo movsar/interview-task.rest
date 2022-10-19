@@ -1,10 +1,5 @@
 ﻿using Data.Models;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Data.Repository {
     public class TaskRepository {
@@ -18,7 +13,7 @@ namespace Data.Repository {
             _context.TdTasks.Add(tdTask);
             await _context.SaveChangesAsync();
         }
-        public async Task<TdTask> Get(Guid? id) {
+        public async Task<TdTask?> GetById(Guid? id) {
             return await _context.TdTasks.FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -33,6 +28,15 @@ namespace Data.Repository {
                     throw;
                 }
             }
+        }
+        public async Task Remove(Guid? id) {
+            var tdTask = await GetById(id);
+            if (tdTask == null) {
+                return;
+            }
+
+            _context.Remove(tdTask);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Remove(TdTask tdTask) {
@@ -50,6 +54,13 @@ namespace Data.Repository {
 
         public IEnumerable<TdTask> GetAll() {
             return _context.TdTasks;
+        }
+
+        public IEnumerable<TdTask> ListOverdue() {
+            return _context.TdTasks.Where(t => t.DueDate > DateTime.Now);
+        }
+        public IEnumerable<TdTask> ListPending() {
+            return _context.TdTasks.Where(t => t.DueDate < DateTime.Now);
         }
     }
 }
