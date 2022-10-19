@@ -1,4 +1,6 @@
 using Data;
+using Microsoft.AspNetCore.Diagnostics;
+using System;
 
 namespace API {
     public class Program {
@@ -12,6 +14,18 @@ namespace API {
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+            app.UseExceptionHandler(config => {
+                config.Run(async context => {
+                    context.Response.ContentType = "application/json";
+
+                    var error = context.Features.Get<IExceptionHandlerFeature>();
+                    if (error != null) {
+                        var ex = error.Error;
+                        await context.Response.WriteAsync("Something went wrong :(");
+                    }
+
+                });
+            });
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment()) {

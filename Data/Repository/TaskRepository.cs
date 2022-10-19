@@ -45,9 +45,9 @@ namespace Data.Repository {
 
         public async Task Remove(Guid? id) {
             var taskToRemove = await GetById(id);
-            if (taskToRemove == null) {
-                return;
-            }
+            //if (taskToRemove == null) {
+            //    return;
+            //}
 
             _context.TdTasks.Remove(taskToRemove);
             await _context.SaveChangesAsync();
