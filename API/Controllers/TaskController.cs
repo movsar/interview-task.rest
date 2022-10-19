@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Data;
+using Data.Models;
+using Microsoft.AspNetCore.Mvc;
+using System.Data.SqlTypes;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -6,10 +9,14 @@ namespace API.Controllers {
     [Route("[controller]")]
     [ApiController]
     public class TaskController : ControllerBase {
-        //[HttpGet]
-        //public IEnumerable<string> Get() {
-        //    return new string[] { "value1", "value2" };
-        //}
+        private readonly Storage _storage;
+        public TaskController(Storage storage) {
+            _storage = storage;
+        }
+        [HttpGet]
+        public IEnumerable<TdTask> Get() {
+            return _storage.TdTasks.GetAll();
+        }
 
         [HttpGet("{id}")]
         public string Get(int id) {
@@ -17,8 +24,8 @@ namespace API.Controllers {
         }
 
         [HttpPost]
-        public void Post([FromBody] string value) {
-
+        public async Task Post([FromBody] string value) {
+            await _storage.TdTasks.Add(new TdTask() { Title = "Hi there!" });
         }
 
         //// PUT api/<TaskController>/5

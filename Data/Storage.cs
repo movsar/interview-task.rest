@@ -9,6 +9,7 @@ namespace Data {
         public Storage(DataContext context, TaskRepository tdTaskRepository) {
             _context = context;
             TdTasks = tdTaskRepository;
+            _context.Database.EnsureCreated();
         }
 
         public async Task<int> SaveChangesAsync() {
