@@ -1,9 +1,6 @@
 ﻿using Data;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.SqlTypes;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace API.Controllers {
     [Route("[controller]")]
@@ -25,13 +22,18 @@ namespace API.Controllers {
         }
 
         [HttpPut("update")]
-        public async Task Put(TdTask tdTask) {
-            await _storage.TdTasks.Update(tdTask);
+        public async Task Put(Guid? id, TdTask tdTask) {
+            await _storage.TdTasks.Update(id, tdTask);
         }
 
         [HttpDelete("delete")]
         public async Task Delete(Guid id) {
             await _storage.TdTasks.Remove(id);
+        }
+
+        [HttpGet("list")]
+        public IEnumerable<TdTask> ListAll() {
+            return _storage.TdTasks.ListAll();
         }
 
         [HttpGet("list/overdue")]
