@@ -14,7 +14,7 @@ namespace Data.Repository {
             await _context.SaveChangesAsync();
         }
 
-        public async Task<TdTask?> GetById(Guid? id) {
+        public async Task<TdTask?> GetById(Guid id) {
             return await _context.TdTasks.FirstOrDefaultAsync(p => p.Id == id);
         }
 
@@ -30,32 +30,31 @@ namespace Data.Repository {
             return _context.TdTasks.Where(t => t.DueDate > DateTime.Now);
         }
 
-        public async Task Update(Guid? id, TdTask tdTask) {
+        public async Task Update(Guid id, TdTask tdTask) {
             var existingTask = await GetById(id);
-            if (existingTask == null) {
-                return;
-            }
 
             existingTask.Title = tdTask.Title;
             existingTask.DueDate = tdTask.DueDate;
-            existingTask.IsCompleted = tdTask.IsCompleted;
 
             _context.SaveChanges();
         }
 
-        public async Task Remove(Guid? id) {
+        public async Task Remove(Guid id) {
             var taskToRemove = await GetById(id);
-            //if (taskToRemove == null) {
-            //    return;
-            //}
 
             _context.TdTasks.Remove(taskToRemove);
             await _context.SaveChangesAsync();
         }
 
-        public bool Exists(Guid? id) {
+        public bool Exists(Guid id) {
             return _context.TdTasks.Any(e => e.Id == id);
         }
 
+        public async Task SetCompletionStatus(Guid id, bool isComplete) {
+            var tdTask = await GetById(id);
+            tdTask.SetCompletionStatus(isComplete);
+            _context.TdTasks.Attach(tdTask).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
     }
 }

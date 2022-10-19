@@ -18,13 +18,13 @@ namespace API.Controllers {
         }
 
         [HttpGet("retrieve")]
-        public async Task<IActionResult> Get(Guid? id) {
+        public async Task<IActionResult> Get(Guid id) {
             var tdTask = await _storage.TdTasks.GetById(id);
             return Ok(tdTask);
         }
 
         [HttpPut("update")]
-        public async Task<IActionResult> Put(Guid? id, TdTask tdTask) {
+        public async Task<IActionResult> Put(Guid id, TdTask tdTask) {
             await _storage.TdTasks.Update(id, tdTask);
             return Ok();
         }
@@ -32,6 +32,20 @@ namespace API.Controllers {
         [HttpDelete("delete")]
         public async Task<IActionResult> Delete(Guid id) {
             await _storage.TdTasks.Remove(id);
+            return Ok();
+        }
+
+        [HttpPatch("mark/complete")]
+        public async Task<IActionResult> MarkComplete(Guid id) {
+            await _storage.TdTasks.SetCompletionStatus(id, true);
+
+            return Ok();
+        }
+
+        [HttpPatch("mark/incomplete")]
+        public async Task<IActionResult> MarkIncomplete(Guid id) {
+            await _storage.TdTasks.SetCompletionStatus(id, false);
+
             return Ok();
         }
 

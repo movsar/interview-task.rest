@@ -10,6 +10,9 @@ namespace Data.Models {
         [StringLength(200)]
         public string Title { get; set; }
         public DateTime DueDate { get; set; }
-        public bool IsCompleted { get; set; }
+        public bool IsCompleted { get; private set; }
+        public void SetCompletionStatus(bool isCompleted) {
+            IsCompleted = isCompleted;
+        }
     }
 }
