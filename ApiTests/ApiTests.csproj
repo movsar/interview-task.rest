@@ -23,8 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\tm-todo-task\API\Api.csproj" />
-    <ProjectReference Include="..\tm-todo-task\Data\Data.csproj" />
+    <ProjectReference Include="..\API\Api.csproj" />
   </ItemGroup>
 
 </Project>

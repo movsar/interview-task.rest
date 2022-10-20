@@ -3,6 +3,7 @@ using Data;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.OpenApi.Models;
 using System;
+using System.Reflection;
 
 namespace API
 {
@@ -26,6 +27,9 @@ namespace API
                     Description = $"\r\n\r\n © Copyright {DateTime.Now.Year} Movsar Bekaev."
                 });
 
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                swagger.IncludeXmlComments(xmlPath);
             });
 
             var app = builder.Build();

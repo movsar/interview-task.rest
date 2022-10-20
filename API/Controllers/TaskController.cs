@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
 {
-    [Route("[controller]")]
     [ApiController]
+    [Route("[controller]")]
     public class TaskController : ControllerBase
     {
         private readonly ITaskRepository _repository;
@@ -14,8 +14,12 @@ namespace API.Controllers
         {
             _repository = repository;
         }
-       
-        [HttpPost("create")]
+
+        /// <summary>
+        /// Creates a new Task
+        /// </summary>
+        /// <response code="201">Returns the newly created task id</response>
+        [HttpPost("Create")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Post(TdTask tdTask)
         {
@@ -23,14 +27,22 @@ namespace API.Controllers
             return CreatedAtAction(nameof(Get), createdTask.Id);
         }
 
-        [HttpGet("retrieve/{id}")]
+        /// <summary>
+        /// Retrieves a Task
+        /// </summary>
+        /// <response code="201">Returns the specified by its id task</response>
+        [HttpGet("Read")]
         public async Task<IActionResult> Get(Guid id)
         {
             var tdTask = await _repository.GetByIdAsync(id);
             return Ok(tdTask);
         }
 
-        [HttpPut("update/{id}")]
+        /// <summary>
+        /// Updates a Task
+        /// </summary>
+        /// <response code="201">Returns Ok</response>
+        [HttpPut("Update")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Put(Guid id, TdTask tdTask)
         {
@@ -38,14 +50,22 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete/{id}")]
+        /// <summary>
+        /// Deletes a Task
+        /// </summary>
+        /// <response code="201">Returns Ok</response>
+        [HttpDelete("Delete")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _repository.RemoveAsync(id);
             return Ok();
         }
 
-        [HttpPatch("mark/complete/{id}")]
+        /// <summary>
+        /// Marks a Task as completed
+        /// </summary>
+        /// <response code="201">Returns Ok</response>
+        [HttpPatch("Mark/Complete")]
         public async Task<IActionResult> MarkComplete(Guid id)
         {
             await _repository.SetCompletionStatusAsync(id, true);
@@ -53,7 +73,11 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpPatch("mark/incomplete/{id}")]
+        /// <summary>
+        /// Marks a Task as not completed
+        /// </summary>
+        /// <response code="201">Returns Ok</response>
+        [HttpPatch("Mark/Incomplete")]
         public async Task<IActionResult> MarkIncomplete(Guid id)
         {
             await _repository.SetCompletionStatusAsync(id, false);
@@ -61,19 +85,31 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpGet("list")]
+        /// <summary>
+        /// Lists all tasks
+        /// </summary>
+        /// <response code="201">Returns a list of all tasks</response>
+        [HttpGet("List")]
         public IActionResult ListAll()
         {
             return Ok(_repository.ListAll());
         }
 
-        [HttpGet("list/overdue")]
+        /// <summary>
+        /// Lists overdue tasks
+        /// </summary>
+        /// <response code="201">Returns a list of overdue tasks</response>
+        [HttpGet("List/overdue")]
         public IActionResult ListOverdue()
         {
             return Ok(_repository.ListOverdue());
         }
 
-        [HttpGet("list/pending")]
+        /// <summary>
+        /// Lists pending tasks
+        /// </summary>
+        /// <response code="201">Returns a list of pending tasks</response>
+        [HttpGet("List/pending")]
         public IActionResult ListPending()
         {
             return Ok(_repository.ListPending());
