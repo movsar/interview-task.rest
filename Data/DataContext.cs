@@ -13,6 +13,7 @@ namespace Data
 {
     public class DataContext : DbContext
     {
+        public DbSet<TdTask>? TdTasks { get; set; }
         public static string GetCurrentConnectionString()
         {
             var config = new ConfigurationBuilder()
@@ -23,13 +24,5 @@ namespace Data
         }
         public DataContext(DbContextOptions options) : base(options)
         { }
-
-        public DbSet<TdTask>? TdTasks { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-            base.OnConfiguring(optionsBuilder);
-        }
     }
 }
