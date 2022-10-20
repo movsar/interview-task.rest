@@ -14,7 +14,7 @@ namespace API.Controllers
         {
             _repository = repository;
         }
-
+       
         [HttpPost("create")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Post(TdTask tdTask)
@@ -23,14 +23,14 @@ namespace API.Controllers
             return CreatedAtAction(nameof(Get), createdTask.Id);
         }
 
-        [HttpGet("retrieve")]
+        [HttpGet("retrieve/{id}")]
         public async Task<IActionResult> Get(Guid id)
         {
             var tdTask = await _repository.GetByIdAsync(id);
             return Ok(tdTask);
         }
 
-        [HttpPut("update")]
+        [HttpPut("update/{id}")]
         [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Put(Guid id, TdTask tdTask)
         {
@@ -38,14 +38,14 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpDelete("delete")]
+        [HttpDelete("delete/{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
             await _repository.RemoveAsync(id);
             return Ok();
         }
 
-        [HttpPatch("mark/complete")]
+        [HttpPatch("mark/complete/{id}")]
         public async Task<IActionResult> MarkComplete(Guid id)
         {
             await _repository.SetCompletionStatusAsync(id, true);
@@ -53,7 +53,7 @@ namespace API.Controllers
             return Ok();
         }
 
-        [HttpPatch("mark/incomplete")]
+        [HttpPatch("mark/incomplete/{id}")]
         public async Task<IActionResult> MarkIncomplete(Guid id)
         {
             await _repository.SetCompletionStatusAsync(id, false);

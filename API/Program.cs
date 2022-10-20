@@ -1,6 +1,7 @@
 using Api.ActionFilters;
 using Data;
 using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.OpenApi.Models;
 using System;
 
 namespace API
@@ -16,7 +17,16 @@ namespace API
             builder.Services.AddScoped<ValidationFilterAttribute>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(swagger =>
+            {
+                swagger.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Version = "v1",
+                    Title = "To Do List API",
+                    Description = $"\r\n\r\n © Copyright {DateTime.Now.Year} Movsar Bekaev."
+                });
+
+            });
 
             var app = builder.Build();
             app.UseExceptionHandler(config =>
