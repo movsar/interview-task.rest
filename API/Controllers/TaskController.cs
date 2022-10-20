@@ -1,4 +1,4 @@
-﻿using Data;
+﻿using Api.ActionFilters;
 using Data.Interfaces;
 using Data.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +16,7 @@ namespace API.Controllers
         }
 
         [HttpPost("create")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Post(TdTask tdTask)
         {
             var createdTask = await _repository.AddAsync(tdTask);
@@ -30,6 +31,7 @@ namespace API.Controllers
         }
 
         [HttpPut("update")]
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         public async Task<IActionResult> Put(Guid id, TdTask tdTask)
         {
             await _repository.UpdateAsync(id, tdTask);
