@@ -1,37 +1,54 @@
-﻿using Data.Models;
+﻿using Data.Interfaces;
+using Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace Data.Repository {
-    public class TaskRepository {
+namespace Data.Repository
+{
+    public class TaskRepository : ITaskRepository
+    {
         private readonly DataContext _context;
 
-        public TaskRepository(DataContext context) {
+        public TaskRepository(DataContext context)
+        {
             _context = context;
+            _context.Database.EnsureCreated();
         }
 
-        public async Task Add(TdTask tdTask) {
+        public async Task<int> SaveChangesAsync()
+        {
+            return await _context.SaveChangesAsync();
+        }
+
+        public async Task<TdTask> AddAsync(TdTask tdTask)
+        {
             _context.TdTasks.Add(tdTask);
             await _context.SaveChangesAsync();
+            return tdTask;
         }
 
-        public async Task<TdTask?> GetById(Guid id) {
+        public async Task<TdTask?> GetByIdAsync(Guid id)
+        {
             return await _context.TdTasks.FirstOrDefaultAsync(p => p.Id == id);
         }
 
-        public IEnumerable<TdTask> ListAll() {
+        public IEnumerable<TdTask> ListAll()
+        {
             return _context.TdTasks;
         }
 
-        public IEnumerable<TdTask> ListOverdue() {
+        public IEnumerable<TdTask> ListOverdue()
+        {
             return _context.TdTasks.Where(t => t.DueDate < DateTime.Now);
         }
 
-        public IEnumerable<TdTask> ListPending() {
+        public IEnumerable<TdTask> ListPending()
+        {
             return _context.TdTasks.Where(t => t.DueDate > DateTime.Now);
         }
 
-        public async Task Update(Guid id, TdTask tdTask) {
-            var existingTask = await GetById(id);
+        public async Task UpdateAsync(Guid id, TdTask tdTask)
+        {
+            var existingTask = await GetByIdAsync(id);
 
             existingTask.Title = tdTask.Title;
             existingTask.DueDate = tdTask.DueDate;
@@ -39,21 +56,18 @@ namespace Data.Repository {
             _context.SaveChanges();
         }
 
-        public async Task Remove(Guid id) {
-            var taskToRemove = await GetById(id);
+        public async Task RemoveAsync(Guid id)
+        {
+            var taskToRemove = await GetByIdAsync(id);
 
             _context.TdTasks.Remove(taskToRemove);
             await _context.SaveChangesAsync();
         }
 
-        public bool Exists(Guid id) {
-            return _context.TdTasks.Any(e => e.Id == id);
-        }
-
-        public async Task SetCompletionStatus(Guid id, bool isComplete) {
-            var tdTask = await GetById(id);
+        public async Task SetCompletionStatusAsync(Guid id, bool isComplete)
+        {
+            var tdTask = await GetByIdAsync(id);
             tdTask.SetCompletionStatus(isComplete);
-            _context.TdTasks.Attach(tdTask).State = EntityState.Modified;
             _context.SaveChanges();
         }
     }

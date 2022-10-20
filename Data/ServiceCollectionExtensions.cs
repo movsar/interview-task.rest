@@ -1,4 +1,5 @@
-﻿using Data.Models;
+﻿using Data.Interfaces;
+using Data.Models;
 using Data.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,8 +9,7 @@ namespace Data {
         public static void RegisterServices(this IServiceCollection services) {
             var cs = "Server=sql_server2022;User ID=SA;Password=<YourStrong@Passw0rd>;Database=Tasks;";
             services.AddDbContext<DataContext>(options => options.UseSqlServer(cs));
-            services.AddScoped<TaskRepository>();
-            services.AddScoped<Storage>();
+            services.AddScoped<ITaskRepository, TaskRepository>();
         }
     }
 }
